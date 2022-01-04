@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
-import { fetchSeeds } from "../redux/seeds";
+import { fetchSeeds, updateSeed } from "../redux/seeds";
 import { fetchSeed } from "../redux/singleSeed";
-import { updateGardener } from "../redux/gardener";
+import { fetchGardener } from "../redux/gardener";
 
 export class GardenStore extends React.Component {
   constructor(props) {
@@ -14,11 +14,12 @@ export class GardenStore extends React.Component {
     this.props.getSeeds();
   }
 
-  handleClick(e) {
-    const newGardenerInfo = this.props.gardener;
-    const seedInfo = this.props.getSingleSeed(e.target.id);
-    console.log(seedInfo);
-    console.log(e.target.id, e.target.value);
+  async handleClick(e) {
+    await this.props.getSingleSeed(e.target.id);
+    let newSeed = this.props.singleSeed;
+    newSeed.gardenerId = 1;
+    await this.props.updateSeed({ ...this.props.singleSeed, newSeed });
+    this.props.getGardener();
   }
 
   render() {
@@ -48,14 +49,19 @@ export class GardenStore extends React.Component {
 }
 
 const mapState = (state) => {
-  return { seeds: state.seeds, gardener: state.gardener };
+  return {
+    seeds: state.seeds,
+    gardener: state.gardener,
+    singleSeed: state.seed,
+  };
 };
 
 const mapDispatch = (dispatch) => {
   return {
     getSeeds: () => dispatch(fetchSeeds()),
     getSingleSeed: (seedId) => dispatch(fetchSeed(seedId)),
-    updateGardener: (gardener) => dispatch(updateGardener(gardener)),
+    updateSeed: (seed) => dispatch(updateSeed(seed)),
+    getGardener: () => dispatch(fetchGardener()),
   };
 };
 

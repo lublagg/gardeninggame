@@ -19,4 +19,13 @@ router.get("/:seedId", async (req, res, next) => {
   }
 });
 
+router.put("/:seedId", async (req, res, next) => {
+  try {
+    const seed = await Seed.findByPk(req.params.seedId);
+    res.send(await seed.update(req.body));
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
