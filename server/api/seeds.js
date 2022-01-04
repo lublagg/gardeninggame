@@ -10,14 +10,13 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:seedId"),
-  async (req, res, next) => {
-    try {
-      const seed = await Seed.findByPk(req.params.seedId);
-      res.json(seed);
-    } catch (err) {
-      next(err);
-    }
-  };
+router.get("/:seedId", async (req, res, next) => {
+  try {
+    const seed = await Seed.findByPk(req.params.seedId);
+    res.json(seed);
+  } catch (err) {
+    next(err);
+  }
+});
 
 module.exports = router;

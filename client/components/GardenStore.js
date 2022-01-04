@@ -1,7 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { fetchSeeds } from "../redux/seeds";
-import { fetchGardener, updateGardener } from "../redux/gardener";
+import { fetchSeed } from "../redux/singleSeed";
+import { updateGardener } from "../redux/gardener";
 
 export class GardenStore extends React.Component {
   constructor(props) {
@@ -14,7 +15,9 @@ export class GardenStore extends React.Component {
   }
 
   handleClick(e) {
-    const oldInfo = this.props.gardener;
+    const newGardenerInfo = this.props.gardener;
+    const seedInfo = this.props.getSingleSeed(e.target.id);
+    console.log(seedInfo);
     console.log(e.target.id, e.target.value);
   }
 
@@ -29,12 +32,7 @@ export class GardenStore extends React.Component {
               {seeds.map((seed) => (
                 <li key={seed.id}>
                   {seed.name}: ${seed.price}{" "}
-                  <button
-                    key={seed.id}
-                    id={seed.name}
-                    value={seed.price}
-                    onClick={this.handleClick}
-                  >
+                  <button key={seed.id} id={seed.id} onClick={this.handleClick}>
                     Buy
                   </button>
                 </li>
@@ -56,6 +54,7 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     getSeeds: () => dispatch(fetchSeeds()),
+    getSingleSeed: (seedId) => dispatch(fetchSeed(seedId)),
     updateGardener: (gardener) => dispatch(updateGardener(gardener)),
   };
 };

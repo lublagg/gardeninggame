@@ -7,7 +7,7 @@ const SET_SEED = "SET_SEED";
 export const setSeed = (seed) => {
   return {
     type: SET_SEED,
-    campus,
+    seed,
   };
 };
 
@@ -15,7 +15,7 @@ export const setSeed = (seed) => {
 export const fetchSeed = (seedId) => {
   return async (dispatch) => {
     try {
-      const { data: seed } = await axios.get(`/api/campuses/${seedId}`);
+      const { data: seed } = await axios.get(`/api/seeds/${seedId}`);
       dispatch(setSeed(seed));
     } catch (err) {
       console.log(err);
@@ -26,8 +26,8 @@ export const fetchSeed = (seedId) => {
 //reducer
 export default function singleSeedReducer(state = {}, action) {
   switch (action.type) {
-    case SET_CAMPUS:
-      return action.campus;
+    case SET_SEED:
+      return action.seed;
     default:
       return state;
   }
