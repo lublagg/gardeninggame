@@ -1,0 +1,28 @@
+body {
+  color: black;
+}
+
+#app {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+#gardener {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+#container {
+  border: 1px solid black;
+  width: fit-content;
+  height: fit-content;
+  padding: 15px;
+}
+
+#seeds {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
