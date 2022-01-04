@@ -8,8 +8,8 @@ const Garden = (props) => {
         <h3>Your Garden</h3>
         <ul>
           <b>Ready to harvest:</b>
-          {gardener[0].seeds.filter((seed) => seed.readyToHarvest).length ? (
-            gardener[0].seeds
+          {gardener.seeds.filter((seed) => seed.readyToHarvest).length ? (
+            gardener.seeds
               .filter((seed) => seed.readyToHarvest)
               .map((seed) => (
                 <li key={seed.id}>
@@ -23,8 +23,8 @@ const Garden = (props) => {
         </ul>
         <ul>
           <b>Growing:</b>
-          {gardener[0].seeds.filter((seed) => seed.isGrowing).length ? (
-            gardener[0].seeds
+          {gardener.seeds.filter((seed) => seed.isGrowing).length ? (
+            gardener.seeds
               .filter((seed) => seed.isGrowing)
               .map((seed) => <li key={seed.id}>{seed.name}</li>)
           ) : (
@@ -33,8 +33,8 @@ const Garden = (props) => {
         </ul>
         <ul>
           <b>Ready to plant:</b>
-          {gardener[0].seeds.filter((seed) => seed.isSeed).length ? (
-            gardener[0].seeds
+          {gardener.seeds.filter((seed) => seed.isSeed).length ? (
+            gardener.seeds
               .filter((seed) => seed.isSeed)
               .map((seed) => (
                 <li key={seed.id}>
@@ -46,7 +46,6 @@ const Garden = (props) => {
           )}
         </ul>
       </div>
-      )
     </div>
   );
 };

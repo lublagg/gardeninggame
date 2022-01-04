@@ -6,13 +6,13 @@ const Gardener = (props) => {
     <div id="container">
       <h3>Your Stats:</h3>
       <p>
-        <b>Name:</b> {gardener[0].name}
+        <b>Name:</b> {gardener.name}
       </p>
       <p>
-        <b>Goodwill:</b> {gardener[0].goodwill} pts
+        <b>Goodwill:</b> {gardener.goodwill} pts
       </p>
       <p>
-        <b>Money:</b> ${gardener[0].money}
+        <b>Money:</b> ${gardener.money}
       </p>
     </div>
   );
