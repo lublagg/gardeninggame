@@ -11,7 +11,8 @@ class App extends React.Component {
       gardener: {},
       seeds: [],
     };
-    this.handleClick = this.handleClick.bind(this);
+    this.buySeeds = this.buySeeds.bind(this);
+    this.plantSeed = this.plantSeed.bind(this);
   }
 
   componentDidMount() {
@@ -34,30 +35,46 @@ class App extends React.Component {
     // }
   }
 
-  async handleClick(e) {
-    e.preventDefault();
-
-    if (e.target.value > this.props.gardener.money) {
+  async buySeeds(seedId, seedPrice) {
+    if (seedPrice > this.props.gardener.money) {
       alert(
         "oh no! you do not have enough money to buy any seeds. you better ask a neighbor for some help!"
       );
     } else {
       // getting seed
-      await this.props.getSingleSeed(e.target.id);
+      await this.props.getSingleSeed(seedId);
       let newSeed = this.props.singleSeed;
       newSeed.gardenerId = 1;
 
       // updating gardener
       let newGardener = this.props.gardener;
       newGardener.seeds.push(newSeed);
-      let price = Number(e.target.value);
-      newGardener.money = this.props.gardener.money - price;
+      newGardener.money = this.props.gardener.money - newSeed.price;
       await this.props.updateGardener({
         ...this.props.gardener,
         ...newGardener,
       });
       this.setState({ gardener: newGardener });
     }
+  }
+
+  async plantSeed(seedId) {
+    await this.props.getSingleSeed(seedId);
+    let updatedSeed = this.props.singleSeed;
+    updatedSeed.isSeed = false;
+    updatedSeed.isGrowing = true;
+
+    let updatedGardener = this.props.gardener;
+
+    updatedGardener.seeds = updatedGardener.seeds.map((seed) =>
+      seed.id === updatedSeed.id ? updatedSeed : seed
+    );
+
+    await this.props.updateGardener({
+      ...this.props.gardener,
+      ...updatedGardener,
+    });
+    this.setState({ gardener: updatedGardener });
   }
 
   render() {
@@ -121,8 +138,7 @@ class App extends React.Component {
                           {seed.name}
                           <button
                             key={seed.id}
-                            id={seed.id}
-                            onClick={() => console.log("hello")}
+                            onClick={() => this.plantSeed(seed.id)}
                           >
                             Plant
                           </button>
@@ -146,9 +162,7 @@ class App extends React.Component {
                         {seed.name}: ${seed.price}{" "}
                         <button
                           key={seed.id}
-                          id={seed.id}
-                          value={seed.price}
-                          onClick={this.handleClick}
+                          onClick={() => this.buySeeds(seed.id, seed.price)}
                         >
                           Buy
                         </button>
