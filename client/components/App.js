@@ -14,6 +14,8 @@ class App extends React.Component {
     this.buySeeds = this.buySeeds.bind(this);
     this.plantSeed = this.plantSeed.bind(this);
     this.waterPlant = this.waterPlant.bind(this);
+    this.sellHarvest = this.sellHarvest.bind(this);
+    this.shareHarvest = this.shareHarvest.bind(this);
   }
 
   componentDidMount() {
@@ -85,6 +87,7 @@ class App extends React.Component {
     }
 
     let updatedGardener = this.props.gardener;
+    updatedGardener.money -= 1;
 
     updatedGardener.seeds = updatedGardener.seeds.map((seed) =>
       seed.id === updatedSeed.id ? updatedSeed : seed
@@ -96,6 +99,29 @@ class App extends React.Component {
     });
 
     this.setState({ gardener: updatedGardener });
+  }
+
+  async sellHarvest(seedId) {
+    let updatedSeed = this.state.gardener.seeds.filter(
+      (seed) => seed.id === seedId
+    )[0];
+
+    let updatedGardener = this.props.gardener;
+    updatedGardener.money += updatedSeed.price * 2;
+    updatedGardener.seeds = updatedGardener.seeds.filter(
+      (seed) => seed.id !== seedId
+    );
+
+    await this.props.updateGardener({
+      ...this.props.gardener,
+      ...updatedGardener,
+    });
+
+    this.setState({ gardener: updatedGardener });
+  }
+
+  shareHarvest(seedId) {
+    console.log(seedId);
   }
 
   render() {
@@ -132,7 +158,17 @@ class App extends React.Component {
                     .length ? (
                     gardener.seeds
                       .filter((seed) => seed.readyToHarvest)
-                      .map((seed) => <li key={seed.id}>{seed.name}</li>)
+                      .map((seed) => (
+                        <li key={seed.id}>
+                          {seed.name}
+                          <button onClick={() => this.sellHarvest(seed.id)}>
+                            Sell
+                          </button>
+                          <button onClick={() => this.shareHarvest(seed.id)}>
+                            Share
+                          </button>
+                        </li>
+                      ))
                   ) : (
                     <li>No plants ready to harvest</li>
                   )}
