@@ -13,6 +13,7 @@ class App extends React.Component {
     };
     this.buySeeds = this.buySeeds.bind(this);
     this.plantSeed = this.plantSeed.bind(this);
+    this.waterPlant = this.waterPlant.bind(this);
   }
 
   componentDidMount() {
@@ -27,12 +28,6 @@ class App extends React.Component {
     if (prevProps.seeds.length !== this.props.seeds.length) {
       this.setState({ seeds: this.props.seeds });
     }
-    // if (
-    //   prevProps.gardener.id === this.props.gardener.id &&
-    //   prevProps.gardener.seeds.length !== this.props.gardener.seeds.length
-    // ) {
-    //   this.setState({ gardener: this.props.gardener });
-    // }
   }
 
   async buySeeds(seedId, seedPrice) {
@@ -74,6 +69,32 @@ class App extends React.Component {
       ...this.props.gardener,
       ...updatedGardener,
     });
+    this.setState({ gardener: updatedGardener });
+  }
+
+  async waterPlant(seedId) {
+    let updatedSeed = this.state.gardener.seeds.filter(
+      (seed) => seed.id === seedId
+    )[0];
+
+    updatedSeed.waterLevel += 1;
+
+    if (updatedSeed.waterLevel === 10) {
+      updatedSeed.isGrowing = false;
+      updatedSeed.readyToHarvest = true;
+    }
+
+    let updatedGardener = this.props.gardener;
+
+    updatedGardener.seeds = updatedGardener.seeds.map((seed) =>
+      seed.id === updatedSeed.id ? updatedSeed : seed
+    );
+
+    await this.props.updateGardener({
+      ...this.props.gardener,
+      ...updatedGardener,
+    });
+
     this.setState({ gardener: updatedGardener });
   }
 
@@ -122,7 +143,17 @@ class App extends React.Component {
                   {gardener.seeds.filter((seed) => seed.isGrowing).length ? (
                     gardener.seeds
                       .filter((seed) => seed.isGrowing)
-                      .map((seed) => <li key={seed.id}>{seed.name}</li>)
+                      .map((seed) => (
+                        <li key={seed.id}>
+                          {seed.name}
+                          <button
+                            key={seed.id}
+                            onClick={() => this.waterPlant(seed.id)}
+                          >
+                            Water
+                          </button>
+                        </li>
+                      ))
                   ) : (
                     <li>Nothing growing</li>
                   )}
